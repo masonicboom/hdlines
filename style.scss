@@ -1,0 +1,22 @@
+$column-width: 40em;
+$gutter-width: 4em;
+
+$text-color: black;
+$text-color-muted: gray;
+$text-color-highlighted: red;
+$headline-text-size: 10px;
+
+
+body {
+  color: $text-color;
+}
+
+
+#header {
+  font-size: $headline-text-size * 3;
+}
+
+
+#headline {
+  font-size: $headline-text-size;
+}

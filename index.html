@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+	"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+	<title>HDFeeds</title>
+	<link rel='stylesheet' href='style.css' type='text/css'/>
+	<script src='https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js'></script>
+	<script type="text/javascript" src="https://www.google.com/jsapi?key=ABQIAAAAbA3vEE3UeTbVhLt2HcPE8xQjQwco874TU6_bmz33dNrhvmND_xQI4xGL6Ka74JV5ZoxKSUnpdqNUZg"></script>
+	
+	<script>
+	var feedUrls = [
+	  'http://rss.slashdot.org/Slashdot/slashdot',
+	  'http://news.ycombinator.com/rss'
+	];
+	
+	
+	function renderEntry(entry) {
+	  var headline = entry.title;
+	  var el = $('<div class="headline">' + headline + '</div>');
+	  $('#headlines').append(el);
+	}
+	
+  
+  google.load("feeds", "1");
+  
+  $(document).ready(function() {
+    
+    $.each(feedUrls, function(index, feedUrl) {
+      var feed = new google.feeds.Feed(feedUrl);
+      feed.load(function(result) {
+        if (result.error) return;
+        
+        for (var i = 0; i < result.feed.entries.length; i++)
+          renderEntry(result.feed.entries[i]);
+      });
+    });
+    
+  });
+	
+	</script>
+	
+</head>
+
+<body>
+
+<div id='header'>HD FEEDS</div>
+<div id='headlines'></div>
+
+</body>
+</html>
