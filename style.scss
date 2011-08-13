@@ -1,15 +1,16 @@
 $column-width: 20em;
-$gutter-width: 2em;
+$gutter-width: 0.5em;
 
 $text-color: black;
 $text-color-muted: gray;
 $text-color-highlighted: red;
-$headline-text-size: 14px;
+$headline-text-size: 10px;
 
 
 body {
   color: $text-color;
-  line-height: 1.4;
+  line-height: 1.7;
+  font-family: verdana;
 }
 
 

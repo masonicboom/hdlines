@@ -21,17 +21,23 @@
 	  'http://rss.slashdot.org/Slashdot/slashdot',
 	  'http://news.ycombinator.com/rss',
 	  'http://googlecode.blogspot.com/atom.xml',
-	  'http://chrome.blogspot.com/atom.xml'
+	  'http://chrome.blogspot.com/atom.xml',
+	  'http://news.google.com/news?pz=1&jfkl=true&cf=all&ned=us&hl=en&topic=w&output=rss',
+	  'http://www.economist.com/rss/the_world_this_week_rss.xml',
+	  'http://www.economist.com/rss/finance_and_economics_rss.xml',
+	  'http://feeds.wired.com/wired/index',
+	  'http://feeds.technologyreview.com/technology_review_top_stories',
+	  'http://feeds.nature.com/nature/rss/current?format=xml'
 	];
 	
 	
-	function renderEntry(entry) {
+	function renderEntry(feedTitle, entry) {
 	  var headline = entry.title;
 	  
 	  // Give stopwords a CSS class so they can be styled.
 	  var headlineHtml = headline.replace(STOPWORD_REGEX, '<span class="stopword">$1</span>');
 	  
-	  var el = $('<a class="headline" href="' + entry.link + '">' + headlineHtml + '</a>');
+	  var el = $('<a class="headline" title="' + feedTitle + ': ' + headline + '" href="' + entry.link + '">' + headlineHtml + '</a>');
 	  $('#headlines').append(el);
 	  
 	  // Tests if the given jQuery element is longer than one line.
@@ -58,10 +64,15 @@
 	  var feed = new google.feeds.Feed(feedUrl);
 	  feed.setNumEntries(ENTRIES_PER_FEED);
     feed.load(function(result) {
-      if (result.error) return;
+      if (result.error) {
+        console.error('Failed to load ' + feedUrl + '.');
+        return;
+      };
+      
+      console.log('Loaded ' + result.feed.entries.length + ' entries from ' + feedUrl + '.');
       
       for (var i = 0; i < result.feed.entries.length; i++)
-        renderEntry(result.feed.entries[i]);
+        renderEntry(result.feed.title, result.feed.entries[i]);
     });
 	}
 	
