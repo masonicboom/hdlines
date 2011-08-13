@@ -4,7 +4,7 @@ $gutter-width: 2em;
 $text-color: black;
 $text-color-muted: gray;
 $text-color-highlighted: red;
-$headline-text-size: 15px;
+$headline-text-size: 14px;
 
 
 body {
@@ -23,4 +23,8 @@ body {
   width: $column-width;
   float: left;
   margin-right: $gutter-width;
+  
+  .stopword {
+    color: $text-color-muted;
+  }
 }
