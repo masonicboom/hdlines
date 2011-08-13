@@ -10,12 +10,13 @@
 	<script type="text/javascript" src="https://www.google.com/jsapi?key=ABQIAAAAbA3vEE3UeTbVhLt2HcPE8xQjQwco874TU6_bmz33dNrhvmND_xQI4xGL6Ka74JV5ZoxKSUnpdqNUZg"></script>
 	
 	<script>
-	var ENTRIES_PER_FEED = 50;
+	var ENTRIES_PER_FEED = 100;
 	
 	
 	var feedUrls = [
 	  'http://rss.slashdot.org/Slashdot/slashdot',
-	  'http://news.ycombinator.com/rss'
+	  'http://news.ycombinator.com/rss',
+	  'http://googlecode.blogspot.com/atom.xml'
 	];
 	
 	
@@ -31,15 +32,15 @@
 	  
 	  // Shorten headline to be one line of text, if necessary.
 	  if (isOverflowing(el) === true) {
+	    // Add ...'s.
+      el.text(el.text() + '...');
+      
 	    // Trim down to fit on one line.
 	    while (isOverflowing(el) === true) {
-  	    var text = el.text();
-  	    el.text(text.substring(0, text.length-1));
+  	    var oldText = el.text();
+  	    var newText = oldText.substring(0, oldText.length - (3+1)) + '...';
+  	    el.text(newText);
       }
-      
-      // Add ...'s.
-      var text = el.text();
-      el.text(text.substring(0, text.length-3) + '...');
 	  }
 	  
 	  

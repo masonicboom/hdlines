@@ -1,5 +1,5 @@
 $column-width: 20em;
-$gutter-width: 4em;
+$gutter-width: 2em;
 
 $text-color: black;
 $text-color-muted: gray;
@@ -21,4 +21,6 @@ body {
 .headline {
   font-size: $headline-text-size;
   width: $column-width;
+  float: left;
+  margin-right: $gutter-width;
 }
