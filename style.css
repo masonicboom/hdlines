@@ -1,0 +1,22 @@
+body {
+  color: black;
+  line-height: 1.8;
+  font-family: verdana; }
+
+#header {
+  font-size: 30px; }
+
+.headline {
+  font-size: 10px;
+  width: 20em;
+  float: left;
+  margin-right: 0.5em; }
+  .headline .stopword {
+    color: gray; }
+
+a.headline {
+  text-decoration: none;
+  color: black; }
+
+a:hover.headline {
+  text-decoration: underline; }

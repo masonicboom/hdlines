@@ -1,77 +1,101 @@
-<!DOCTYPE html>
-<html>
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+	"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-  <meta charset='utf-8'>
-
-  <title>masonicboom/hdlines @ GitHub</title>
-
-  <style type="text/css">
-    body {
-      margin-top: 1.0em;
-      background-color: #f4f3e1;
-      font-family: Helvetica, Arial, FreeSans, san-serif;
-      color: #000000;
-    }
-    #container {
-      margin: 0 auto;
-      width: 700px;
-    }
-    h1 { font-size: 3.8em; color: #0b0c1e; margin-bottom: 3px; }
-    h1 .small { font-size: 0.4em; }
-    h1 a { text-decoration: none }
-    h2 { font-size: 1.5em; color: #0b0c1e; }
-    h3 { text-align: center; color: #0b0c1e; }
-    a { color: #0b0c1e; }
-    .description { font-size: 1.2em; margin-bottom: 30px; margin-top: 30px; font-style: italic;}
-    .download { float: right; }
-    pre { background: #000; color: #fff; padding: 15px;}
-    hr { border: 0; width: 80%; border-bottom: 1px solid #aaa}
-    .footer { text-align:center; padding-top:30px; font-style: italic; }
-  </style>
+	<title>HDLines</title>
+	<link rel='stylesheet' href='style.css' type='text/css'/>
+	<script src='https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js'></script>
+	<script type="text/javascript" src="https://www.google.com/jsapi?key=ABQIAAAAbA3vEE3UeTbVhLt2HcPE8xQjQwco874TU6_bmz33dNrhvmND_xQI4xGL6Ka74JV5ZoxKSUnpdqNUZg"></script>
+	
+	<script>
+	var ENTRIES_PER_FEED = 100;
+	
+	// Stopwords from http://www.lextek.com/manuals/onix/stopwords1.html.
+	var STOPWORDS = ['a','about','above','across','after','again','against','all','almost','alone','along','already','also','although','always','among','an','and','another','any','anybody','anyone','anything','anywhere','are','area','areas','around','as','ask','asked','asking','asks','at','away','b','back','backed','backing','backs','be','became','because','become','becomes','been','before','began','behind','being','beings','best','better','between','big','both','but','by','c','came','can','cannot','case','cases','certain','certainly','clear','clearly','come','could','d','did','differ','different','differently','do','does','done','down','down','downed','downing','downs','during','e','each','early','either','end','ended','ending','ends','enough','even','evenly','ever','every','everybody','everyone','everything','everywhere','f','face','faces','fact','facts','far','felt','few','find','finds','first','for','four','from','full','fully','further','furthered','furthering','furthers','g','gave','general','generally','get','gets','give','given','gives','go','going','good','goods','got','great','greater','greatest','group','grouped','grouping','groups','h','had','has','have','having','he','her','here','herself','high','high','high','higher','highest','him','himself','his','how','however','i','if','important','in','interest','interested','interesting','interests','into','is','it','its','itself','j','just','k','keep','keeps','kind','knew','know','known','knows','l','large','largely','last','later','latest','least','less','let','lets','like','likely','long','longer','longest','m','made','make','making','man','many','may','me','member','members','men','might','more','most','mostly','mr','mrs','much','must','my','myself','n','necessary','need','needed','needing','needs','never','new','new','newer','newest','next','no','nobody','non','noone','not','nothing','now','nowhere','number','numbers','o','of','off','often','old','older','oldest','on','once','one','only','open','opened','opening','opens','or','order','ordered','ordering','orders','other','others','our','out','over','p','part','parted','parting','parts','per','perhaps','place','places','point','pointed','pointing','points','possible','present','presented','presenting','presents','problem','problems','put','puts','q','quite','r','rather','really','right','right','room','rooms','s','said','same','saw','say','says','second','seconds','see','seem','seemed','seeming','seems','sees','several','shall','she','should','show','showed','showing','shows','side','sides','since','small','smaller','smallest','so','some','somebody','someone','something','somewhere','state','states','still','still','such','sure','t','take','taken','than','that','the','their','them','then','there','therefore','these','they','thing','things','think','thinks','this','those','though','thought','thoughts','three','through','thus','to','today','together','too','took','toward','turn','turned','turning','turns','two','u','under','until','up','upon','us','use','used','uses','v','very','w','want','wanted','wanting','wants','was','way','ways','we','well','wells','went','were','what','when','where','whether','which','while','who','whole','whose','why','will','with','within','without','work','worked','working','works','would','x','y','year','years','yet','you','young','younger','youngest','your','yours','z'];
+	var STOPWORD_REGEX = new RegExp('\\b(' + STOPWORDS.join('|') + ')\\b', 'g');
+	
+	
+	var feedUrls = [
+	  'http://rss.slashdot.org/Slashdot/slashdot',
+	  'http://news.ycombinator.com/rss',
+	  'http://googlecode.blogspot.com/atom.xml',
+	  'http://chrome.blogspot.com/atom.xml',
+	  'http://news.google.com/news?pz=1&jfkl=true&cf=all&ned=us&hl=en&topic=w&output=rss',
+	  'http://www.economist.com/rss/the_world_this_week_rss.xml',
+	  'http://www.economist.com/rss/finance_and_economics_rss.xml',
+	  'http://feeds.wired.com/wired/index',
+	  'http://feeds.technologyreview.com/technology_review_top_stories',
+	  'http://feeds.nature.com/nature/rss/current?format=xml'
+	];
+	
+	
+	function insertEntryOnDate(entryElement, date) {
+	  $('#headlines').append(entryElement);
+	}
+	
+	
+	function renderEntry(feedTitle, entry) {
+	  var headline = entry.title;
+	  
+	  // Give stopwords a CSS class so they can be styled.
+	  var headlineHtml = headline.replace(STOPWORD_REGEX, '<span class="stopword">$1</span>');
+	  
+	  var el = $('<a class="headline" title="' + feedTitle + ': ' + headline + '" href="' + entry.link + '">' + headlineHtml + '</a>');
+	  insertEntryOnDate(el, new Date(entry.publishedDate));
+	  
+	  // Tests if the given jQuery element is longer than one line.
+	  function isOverflowing(element) {
+	    return element[0].offsetHeight > parseInt(element.css('line-height'));
+	  }
+	  
+	  // Shorten headline to be one line of text, if necessary.
+	  if (isOverflowing(el) === true) {
+	    // Add ...'s.
+      el.text(el.text() + '...');
+      
+	    // Trim down to fit on one line.
+	    while (isOverflowing(el) === true) {
+  	    var oldText = el.text();
+  	    var newText = oldText.substring(0, oldText.length - (3+1)) + '...';
+  	    el.text(newText);
+      }
+	  }
+	}
+	
+	
+	function loadFeed(feedUrl) {
+	  var feed = new google.feeds.Feed(feedUrl);
+	  feed.setNumEntries(ENTRIES_PER_FEED);
+    feed.load(function(result) {
+      if (result.error) {
+        console.error('Failed to load ' + feedUrl + '.');
+        return;
+      };
+      
+      console.log('Loaded ' + result.feed.entries.length + ' entries from ' + feedUrl + '.');
+      
+      for (var i = 0; i < result.feed.entries.length; i++)
+        renderEntry(result.feed.title, result.feed.entries[i]);
+    });
+	}
+	
+  
+  google.load("feeds", "1");
+  
+  $(document).ready(function() {
+    $.each(feedUrls, function(i, feedUrl) { loadFeed(feedUrl) });
+  });
+	
+	</script>
+	
 </head>
 
 <body>
-  <a href="http://github.com/masonicboom/hdlines"><img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" /></a>
 
-  <div id="container">
+<div id='header'>HD LINES</div>
+<div id='headlines'></div>
 
-    <div class="download">
-      <a href="http://github.com/masonicboom/hdlines/zipball/master">
-        <img border="0" width="90" src="http://github.com/images/modules/download/zip.png"></a>
-      <a href="http://github.com/masonicboom/hdlines/tarball/master">
-        <img border="0" width="90" src="http://github.com/images/modules/download/tar.png"></a>
-    </div>
-
-    <h1><a href="http://github.com/masonicboom/hdlines">hdlines</a>
-      <span class="small">by <a href="http://github.com/masonicboom">masonicboom</a></span></h1>
-
-    <div class="description">
-      
-    </div>
-
-    <h2>Authors</h2>
-<p>Mason Simon (masonsimon@gmail.com)<br/><br/>      </p>
-<h2>Contact</h2>
-<p>Mason Simon (masonsimon@gmail.com)<br/>      </p>
-
-
-    <h2>Download</h2>
-    <p>
-      You can download this project in either
-      <a href="http://github.com/masonicboom/hdlines/zipball/master">zip</a> or
-      <a href="http://github.com/masonicboom/hdlines/tarball/master">tar</a> formats.
-    </p>
-    <p>You can also clone the project with <a href="http://git-scm.com">Git</a>
-      by running:
-      <pre>$ git clone git://github.com/masonicboom/hdlines</pre>
-    </p>
-
-    <div class="footer">
-      get the source code on GitHub : <a href="http://github.com/masonicboom/hdlines">masonicboom/hdlines</a>
-    </div>
-
-  </div>
-
-  
 </body>
 </html>
