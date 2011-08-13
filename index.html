@@ -10,6 +10,9 @@
 	<script type="text/javascript" src="https://www.google.com/jsapi?key=ABQIAAAAbA3vEE3UeTbVhLt2HcPE8xQjQwco874TU6_bmz33dNrhvmND_xQI4xGL6Ka74JV5ZoxKSUnpdqNUZg"></script>
 	
 	<script>
+	var ENTRIES_PER_FEED = 10;
+	
+	
 	var feedUrls = [
 	  'http://rss.slashdot.org/Slashdot/slashdot',
 	  'http://news.ycombinator.com/rss'
@@ -22,21 +25,23 @@
 	  $('#headlines').append(el);
 	}
 	
+	
+	function loadFeed(feedUrl) {
+	  var feed = new google.feeds.Feed(feedUrl);
+	  feed.setNumEntries(ENTRIES_PER_FEED);
+    feed.load(function(result) {
+      if (result.error) return;
+      
+      for (var i = 0; i < result.feed.entries.length; i++)
+        renderEntry(result.feed.entries[i]);
+    });
+	}
+	
   
   google.load("feeds", "1");
   
   $(document).ready(function() {
-    
-    $.each(feedUrls, function(index, feedUrl) {
-      var feed = new google.feeds.Feed(feedUrl);
-      feed.load(function(result) {
-        if (result.error) return;
-        
-        for (var i = 0; i < result.feed.entries.length; i++)
-          renderEntry(result.feed.entries[i]);
-      });
-    });
-    
+    $.each(feedUrls, function(i, feedUrl) { loadFeed(feedUrl) });
   });
 	
 	</script>
