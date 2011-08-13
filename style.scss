@@ -1,14 +1,15 @@
-$column-width: 40em;
+$column-width: 20em;
 $gutter-width: 4em;
 
 $text-color: black;
 $text-color-muted: gray;
 $text-color-highlighted: red;
-$headline-text-size: 10px;
+$headline-text-size: 15px;
 
 
 body {
   color: $text-color;
+  line-height: 1.4;
 }
 
 
@@ -17,6 +18,7 @@ body {
 }
 
 
-#headline {
+.headline {
   font-size: $headline-text-size;
+  width: $column-width;
 }

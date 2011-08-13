@@ -10,7 +10,7 @@
 	<script type="text/javascript" src="https://www.google.com/jsapi?key=ABQIAAAAbA3vEE3UeTbVhLt2HcPE8xQjQwco874TU6_bmz33dNrhvmND_xQI4xGL6Ka74JV5ZoxKSUnpdqNUZg"></script>
 	
 	<script>
-	var ENTRIES_PER_FEED = 25;
+	var ENTRIES_PER_FEED = 50;
 	
 	
 	var feedUrls = [
@@ -23,6 +23,27 @@
 	  var headline = entry.title;
 	  var el = $('<div class="headline">' + headline + '</div>');
 	  $('#headlines').append(el);
+	  
+	  // Tests if the given jQuery element is longer than one line.
+	  function isOverflowing(element) {
+	    return element[0].offsetHeight > parseInt(element.css('line-height'));
+	  }
+	  
+	  // Shorten headline to be one line of text, if necessary.
+	  if (isOverflowing(el) === true) {
+	    // Trim down to fit on one line.
+	    while (isOverflowing(el) === true) {
+  	    var text = el.text();
+  	    el.text(text.substring(0, text.length-1));
+      }
+      
+      // Add ...'s.
+      var text = el.text();
+      el.text(text.substring(0, text.length-3) + '...');
+	  }
+	  
+	  
+    
 	}
 	
 	
