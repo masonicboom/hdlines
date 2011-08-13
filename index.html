@@ -31,7 +31,7 @@
 	  // Give stopwords a CSS class so they can be styled.
 	  var headlineHtml = headline.replace(STOPWORD_REGEX, '<span class="stopword">$1</span>');
 	  
-	  var el = $('<div class="headline">' + headlineHtml + '</div>');
+	  var el = $('<a class="headline" href="' + entry.link + '">' + headlineHtml + '</a>');
 	  $('#headlines').append(el);
 	  
 	  // Tests if the given jQuery element is longer than one line.

@@ -28,3 +28,10 @@ body {
     color: $text-color-muted;
   }
 }
+a.headline {
+  text-decoration: none;
+  color: $text-color;
+}
+a:hover.headline {
+  text-decoration: underline;
+}
