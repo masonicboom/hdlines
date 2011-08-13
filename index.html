@@ -31,6 +31,11 @@
 	];
 	
 	
+	function insertEntryOnDate(entryElement, date) {
+	  $('#headlines').append(entryElement);
+	}
+	
+	
 	function renderEntry(feedTitle, entry) {
 	  var headline = entry.title;
 	  
@@ -38,7 +43,7 @@
 	  var headlineHtml = headline.replace(STOPWORD_REGEX, '<span class="stopword">$1</span>');
 	  
 	  var el = $('<a class="headline" title="' + feedTitle + ': ' + headline + '" href="' + entry.link + '">' + headlineHtml + '</a>');
-	  $('#headlines').append(el);
+	  insertEntryOnDate(el, new Date(entry.publishedDate));
 	  
 	  // Tests if the given jQuery element is longer than one line.
 	  function isOverflowing(element) {
