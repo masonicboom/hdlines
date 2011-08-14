@@ -2,9 +2,9 @@ $column-width: 20em;
 $gutter-width: 0.5em;
 
 $text-color: #333;
-$text-color-muted: #DDD;
+$text-color-muted: #EEE;
 $text-color-highlighted: red;
-$text-color-inverted: white;
+$text-color-inverted: #AAA;
 $headline-text-size: 10px;
 
 
@@ -28,7 +28,7 @@ body {
   
   .date {
     background-color: $text-color-muted;
-    color: white;
+    color: $text-color-inverted;
     text-align: right;
     padding: 0 1em 0 1em;
   }

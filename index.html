@@ -45,16 +45,28 @@
 	}
 	
 	
+	var MAX_HEADLINES_PER_DATE_ELEMENT = 15;
+	
+	
 	function insertEntryOnDate(entryElement, date) {
 	  var dateString = date2YYYYMMDD(date);
+	  
+	  function dayElIsTooBig(el) {
+	    return el.find('.headline').length >= MAX_HEADLINES_PER_DATE_ELEMENT;
+	  }
 	  
 	  var dayEl = DAY_ELEMENTS[dateString];
 	  if (dayEl === undefined) {
 	    dayEl = $('<div class="day"><div class="date">' + dateString + '</div><div class="clear" style="clear: both;"></div></div>');
   	  $('#headlines').append(dayEl);
   	  DAY_ELEMENTS[dateString] = dayEl;
-	  }
-	  
+	  } else if (dayElIsTooBig(dayEl)) {
+	    var newDayEl = $('<div class="day"><div class="date">' + dateString + '</div><div class="clear" style="clear: both;"></div></div>');
+	    newDayEl.insertAfter(dayEl);
+	    DAY_ELEMENTS[dateString] = newDayEl;
+	    dayEl = newDayEl;
+    }
+    	  
 	  entryElement.insertBefore(dayEl.find(".clear"));
 	}
 	
