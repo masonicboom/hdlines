@@ -105,13 +105,20 @@
 	function loadFeed(feedUrl) {
 	  var feed = new google.feeds.Feed(feedUrl);
 	  feed.setNumEntries(ENTRIES_PER_FEED);
+	  
+	  // Create an entry for the feed in the feeds list.
+	  var feedEl = $('<div class="feed"><span class="title">Loading...</span><span class="url">' + feedUrl +'</span></div>');
+	  $('#feeds').prepend(feedEl);
+	  
+	  // Asynchronously load the feed.
     feed.load(function(result) {
       if (result.error) {
-        console.error('Failed to load ' + feedUrl + '.');
+        feedEl.find('.title').text('Failed to load.');
         return;
       };
       
       console.log('Loaded ' + result.feed.entries.length + ' entries from ' + feedUrl + '.');
+      feedEl.find('.title').text(result.feed.title);
       
       for (var i = 0; i < result.feed.entries.length; i++)
         renderEntry(result.feed.title, result.feed.entries[i]);
@@ -132,6 +139,7 @@
 <body>
 
 <div id='header'>HD LINES</div>
+<div id='feeds'></div>
 <div id='headlines'></div>
 
 </body>
