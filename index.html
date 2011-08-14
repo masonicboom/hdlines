@@ -30,9 +30,44 @@
 	  'http://feeds.nature.com/nature/rss/current?format=xml'
 	];
 	
+
+  var DEFAULT_ENTRY_DATE = Date.now();
+	
+	// Mapping from a date, in YYYYMMDD form, to an element holding entries for that date.
+	var DAY_ELEMENTS = {};
+	
+	
+	function date2YYYYMMDD(date) {
+	  if (date === null)
+	    return '????-??-??';
+	  
+	  return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
+	}
+	
+	
+	var MAX_HEADLINES_PER_DATE_ELEMENT = 15;
+	
 	
 	function insertEntryOnDate(entryElement, date) {
-	  $('#headlines').append(entryElement);
+	  var dateString = date2YYYYMMDD(date);
+	  
+	  function dayElIsTooBig(el) {
+	    return el.find('.headline').length >= MAX_HEADLINES_PER_DATE_ELEMENT;
+	  }
+	  
+	  var dayEl = DAY_ELEMENTS[dateString];
+	  if (dayEl === undefined) {
+	    dayEl = $('<div class="day"><div class="date">' + dateString + '</div><div class="clear" style="clear: both;"></div></div>');
+  	  $('#headlines').append(dayEl);
+  	  DAY_ELEMENTS[dateString] = dayEl;
+	  } else if (dayElIsTooBig(dayEl)) {
+	    var newDayEl = $('<div class="day"><div class="date">' + dateString + '</div><div class="clear" style="clear: both;"></div></div>');
+	    newDayEl.insertAfter(dayEl);
+	    DAY_ELEMENTS[dateString] = newDayEl;
+	    dayEl = newDayEl;
+    }
+    	  
+	  entryElement.insertBefore(dayEl.find(".clear"));
 	}
 	
 	
@@ -43,7 +78,9 @@
 	  var headlineHtml = headline.replace(STOPWORD_REGEX, '<span class="stopword">$1</span>');
 	  
 	  var el = $('<a class="headline" title="' + feedTitle + ': ' + headline + '" href="' + entry.link + '">' + headlineHtml + '</a>');
-	  insertEntryOnDate(el, new Date(entry.publishedDate));
+	  
+	  var entryDate = entry.publishedDate || DEFAULT_ENTRY_DATE;
+	  insertEntryOnDate(el, new Date(entryDate));
 	  
 	  // Tests if the given jQuery element is longer than one line.
 	  function isOverflowing(element) {
