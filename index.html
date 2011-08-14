@@ -17,7 +17,7 @@
 	var STOPWORD_REGEX = new RegExp('\\b(' + STOPWORDS.join('|') + ')\\b', 'g');
 	
 	
-	var feedUrls = [
+	var initialFeedUrls = [
 	  'http://rss.slashdot.org/Slashdot/slashdot',
 	  'http://news.ycombinator.com/rss',
 	  'http://googlecode.blogspot.com/atom.xml',
@@ -29,6 +29,10 @@
 	  'http://feeds.technologyreview.com/technology_review_top_stories',
 	  'http://feeds.nature.com/nature/rss/current?format=xml'
 	];
+	
+	// This object maps from loaded feed URL's to... something. For use in
+	// preventing duplicate feeds from being loaded.
+	var FEEDS = {};
 	
 
   var DEFAULT_ENTRY_DATE = Date.now();
@@ -103,6 +107,12 @@
 	
 	
 	function loadFeed(feedUrl) {
+	  if (feedUrl in FEEDS) {
+	    alert('Feed already loaded: ' + feedUrl);
+	    return;
+	  }
+	  FEEDS[feedUrl] = 'loading';
+	  
 	  var feed = new google.feeds.Feed(feedUrl);
 	  feed.setNumEntries(ENTRIES_PER_FEED);
 	  
@@ -146,7 +156,7 @@
     });
     
     // Load feeds.
-    $.each(feedUrls, function(i, feedUrl) { loadFeed(feedUrl) });
+    $.each(initialFeedUrls, function(i, feedUrl) { loadFeed(feedUrl) });
   });
 	
 	</script>
