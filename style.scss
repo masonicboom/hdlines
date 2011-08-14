@@ -1,9 +1,10 @@
 $column-width: 20em;
 $gutter-width: 0.5em;
 
-$text-color: black;
-$text-color-muted: gray;
+$text-color: #333;
+$text-color-muted: #DDD;
 $text-color-highlighted: red;
+$text-color-inverted: white;
 $headline-text-size: 10px;
 
 
@@ -19,11 +20,23 @@ body {
 }
 
 
-.headline {
+.day {
   font-size: $headline-text-size;
-  width: $column-width;
   float: left;
   margin-right: $gutter-width;
+  width: $column-width;
+  
+  .date {
+    background-color: $text-color-muted;
+    color: white;
+    text-align: right;
+    padding: 0 1em 0 1em;
+  }
+}
+
+.headline {
+  width: $column-width;
+  display: block;
   
   .stopword {
     color: $text-color-muted;
@@ -35,4 +48,9 @@ a.headline {
 }
 a:hover.headline {
   text-decoration: underline;
+  color: $text-color-highlighted;
+  
+  .stopword {
+    color: $text-color-highlighted;;
+  }
 }

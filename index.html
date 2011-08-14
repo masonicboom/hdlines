@@ -30,9 +30,32 @@
 	  'http://feeds.nature.com/nature/rss/current?format=xml'
 	];
 	
+
+  var DEFAULT_ENTRY_DATE = Date.now();
+	
+	// Mapping from a date, in YYYYMMDD form, to an element holding entries for that date.
+	var DAY_ELEMENTS = {};
+	
+	
+	function date2YYYYMMDD(date) {
+	  if (date === null)
+	    return '????-??-??';
+	  
+	  return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
+	}
+	
 	
 	function insertEntryOnDate(entryElement, date) {
-	  $('#headlines').append(entryElement);
+	  var dateString = date2YYYYMMDD(date);
+	  
+	  var dayEl = DAY_ELEMENTS[dateString];
+	  if (dayEl === undefined) {
+	    dayEl = $('<div class="day"><div class="date">' + dateString + '</div><div class="clear" style="clear: both;"></div></div>');
+  	  $('#headlines').append(dayEl);
+  	  DAY_ELEMENTS[dateString] = dayEl;
+	  }
+	  
+	  entryElement.insertBefore(dayEl.find(".clear"));
 	}
 	
 	
@@ -43,7 +66,9 @@
 	  var headlineHtml = headline.replace(STOPWORD_REGEX, '<span class="stopword">$1</span>');
 	  
 	  var el = $('<a class="headline" title="' + feedTitle + ': ' + headline + '" href="' + entry.link + '">' + headlineHtml + '</a>');
-	  insertEntryOnDate(el, new Date(entry.publishedDate));
+	  
+	  var entryDate = entry.publishedDate || DEFAULT_ENTRY_DATE;
+	  insertEntryOnDate(el, new Date(entryDate));
 	  
 	  // Tests if the given jQuery element is longer than one line.
 	  function isOverflowing(element) {
