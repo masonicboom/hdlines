@@ -20,6 +20,24 @@ body {
 }
 
 
+#feeds {
+  font-size: $headline-text-size;
+  margin: 1em 0 2em 0;
+  
+  .title {
+    margin-right: 1em;
+  }
+  
+  .url {
+    margin-right: 1em;
+  }
+}
+
+form {
+  display: inline;
+}
+
+
 .day {
   font-size: $headline-text-size;
   float: left;
