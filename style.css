@@ -11,6 +11,8 @@ body {
   margin: 1em 0 2em 0; }
   #feeds .title {
     margin-right: 1em; }
+  #feeds .url {
+    margin-right: 1em; }
 
 form {
   display: inline; }

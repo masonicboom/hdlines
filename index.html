@@ -106,6 +106,28 @@
 	}
 	
 	
+	function renderFeed(feed) {
+	  $.each(feed.entries, function(i, entry) {
+	    renderEntry(feed.title, entry);
+	  });
+	}
+	
+	
+	function removeFeed(feed) {
+	  feed.element.remove();
+	  delete FEEDS[feed.url];
+	  
+	  // Re-render feeds, without the removed one.
+	  $('#headlines').empty();
+	  DAY_ELEMENTS = {};
+	  $.each(FEEDS, function(index, feed) {
+	    if (typeof(feed) !== 'object') return;
+	    
+	    renderFeed(feed);
+	  });
+	}
+	
+	
 	function loadFeed(feedUrl) {
 	  if (feedUrl in FEEDS) {
 	    alert('Feed already loaded: ' + feedUrl);
@@ -115,23 +137,29 @@
 	  
 	  var feed = new google.feeds.Feed(feedUrl);
 	  feed.setNumEntries(ENTRIES_PER_FEED);
+	  feed.url = feedUrl;
 	  
 	  // Create an entry for the feed in the feeds list.
-	  var feedEl = $('<div class="feed"><span class="title">Loading...</span><span class="url">' + feedUrl +'</span></div>');
+	  var feedEl = $('<div class="feed"><span class="title">Loading...</span><span class="url">' + feedUrl +'</span><a href="#">remove</a></div>');
 	  $('#feeds').prepend(feedEl);
+	  feed.element = feedEl;
+	  feedEl.find('a').click(function() { removeFeed(feed); });
 	  
 	  // Asynchronously load the feed.
     feed.load(function(result) {
       if (result.error) {
         feedEl.find('.title').text('Failed to load.');
+        FEEDS[feedUrl] = 'failed to load';
         return;
       };
       
-      console.log('Loaded ' + result.feed.entries.length + ' entries from ' + feedUrl + '.');
-      feedEl.find('.title').text(result.feed.title);
+      var feed = result.feed;
+      FEEDS[feedUrl] = feed;
       
-      for (var i = 0; i < result.feed.entries.length; i++)
-        renderEntry(result.feed.title, result.feed.entries[i]);
+      console.log('Loaded ' + feed.entries.length + ' entries from ' + feedUrl + '.');
+      feedEl.find('.title').text(feed.title);
+      
+      renderFeed(feed);
     });
 	}
 	
