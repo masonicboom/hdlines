@@ -129,6 +129,23 @@
   google.load("feeds", "1");
   
   $(document).ready(function() {
+    // Set up feed adder.
+    $('#feedAddForm input[type="text"]').bind({
+      click: function(eventObject) { eventObject.target.value = ''; },
+      blur: function(eventObject) { 
+        if (eventObject.target.value === '')
+          eventObject.target.value = 'enter feed URL here';
+      }
+    });
+    
+    $('#feedAddForm').submit(function(eventObject) {
+      var feedUrl = $('#feedAddForm input[type="text"]')[0].value;
+      loadFeed(feedUrl);
+      $('#feedAddForm input[type="text"]')[0].value = 'enter feed URL here';
+      return false; // Prevent the event from propagating further.
+    });
+    
+    // Load feeds.
     $.each(feedUrls, function(i, feedUrl) { loadFeed(feedUrl) });
   });
 	
@@ -139,7 +156,16 @@
 <body>
 
 <div id='header'>HD LINES</div>
-<div id='feeds'></div>
+<div id='feeds'>
+  <div class='feed' id='feedAdder'>
+    <span class="title">Add a feed:</span><span class="url">
+      <form id='feedAddForm'>
+        <input type='text' size='50' value='enter feed URL here'></input>
+        <input type='submit' value='add'></input>
+      </form>
+    </span>
+  </div>
+</div>
 <div id='headlines'></div>
 
 </body>

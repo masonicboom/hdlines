@@ -12,6 +12,9 @@ body {
   #feeds .title {
     margin-right: 1em; }
 
+form {
+  display: inline; }
+
 .day {
   font-size: 10px;
   float: left;

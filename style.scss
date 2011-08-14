@@ -29,6 +29,10 @@ body {
   }
 }
 
+form {
+  display: inline;
+}
+
 
 .day {
   font-size: $headline-text-size;
